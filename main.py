@@ -31,7 +31,7 @@ async def login_user(credentials: OAuth2PasswordRequestForm = Depends()):
 #test api "hello world"
 @app.get("/")
 async def read_root():
-    return {"Hello": "Wo"}
+    return {"Hello": "World"}
 
 
 if __name__ == "__main__":
