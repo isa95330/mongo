@@ -1,0 +1,134 @@
+Projet API FastAPI avec Authentification JWT
+Description
+Ce projet implémente une API RESTful en utilisant FastAPI. Il comprend des fonctionnalités d'authentification basées sur JWT pour sécuriser les endpoints. Ce guide vous montrera comment configurer l'environnement et utiliser l'API.
+
+Prérequis
+Python 3.7 ou supérieur
+Docker (si vous utilisez MongoDB via Docker)
+MongoDB en cours d'exécution (soit via Docker, soit installé localement)
+Un environnement virtuel Python pour isoler les dépendances
+Installation
+1. Cloner le projet
+Clonez ce projet sur votre machine locale :
+
+bash
+Copier le code
+git clone https://github.com/votre-utilisateur/votre-repository.git
+cd votre-repository
+2. Créer et activer un environnement virtuel
+Créez un environnement virtuel pour gérer les dépendances du projet :
+
+bash
+Copier le code
+python -m venv venv
+Activez l'environnement virtuel :
+
+Sur Windows :
+bash
+Copier le code
+venv\Scripts\activate
+Sur Linux/Mac :
+bash
+Copier le code
+source venv/bin/activate
+3. Installer les dépendances
+Installez les dépendances du projet à partir du fichier requirements.txt (vous pouvez en créer un en fonction des bibliothèques utilisées) :
+
+bash
+Copier le code
+pip install -r requirements.txt
+Si vous n'avez pas de fichier requirements.txt, vous pouvez installer les bibliothèques nécessaires manuellement :
+
+bash
+Copier le code
+pip install fastapi motor passlib python-dotenv
+4. Configurer les variables d'environnement
+Ce projet utilise un fichier .env pour stocker les variables sensibles, telles que la clé secrète pour la signature des tokens JWT.
+
+Génération de la clé secrète
+Pour générer une clé secrète sécurisée, utilisez la commande suivante :
+
+bash
+Copier le code
+echo "SECRET_KEY=$(curl -s 'https://www.random.org/strings/?num=1&len=32&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new')" > .env
+Cette commande génère une clé secrète aléatoire de 32 caractères et la place dans le fichier .env.
+
+Exemple de fichier .env
+Voici un exemple du contenu de votre fichier .env :
+
+env
+Copier le code
+SECRET_KEY=VotreCléSecrèteAléatoireGénérée
+MONGO_URI=mongodb://localhost:27017
+5. Lancer l'application
+Une fois les dépendances installées et les variables d'environnement configurées, vous pouvez démarrer votre application avec FastAPI.
+
+Si vous utilisez Uvicorn comme serveur ASGI, lancez l'application avec la commande suivante :
+
+bash
+Copier le code
+uvicorn main:app --reload
+Cela démarrera l'application en mode développement avec rechargement automatique des changements.
+
+Utilisation de l'API
+L'API expose des endpoints pour la gestion des utilisateurs, la création de comptes, et la connexion via JWT. Voici quelques exemples :
+
+Créer un utilisateur
+Méthode : POST
+URL : /users/
+Corps (JSON) :
+json
+Copier le code
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "password": "password123",
+  "address": "123 Street",
+  "phone_number": "1234567890",
+  "is_admin": false
+}
+Se connecter
+Méthode : POST
+URL : /login/
+Corps (JSON) :
+json
+Copier le code
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+Cela renverra un token JWT que vous pourrez utiliser pour vous authentifier sur les autres endpoints.
+
+Tests
+Pour effectuer des tests unitaires, vous pouvez utiliser pytest. Assurez-vous que votre environnement virtuel est activé, puis lancez les tests avec la commande suivante :
+
+bash
+Copier le code
+pytest
+Docker (Optionnel)
+Si vous souhaitez utiliser Docker pour exécuter MongoDB, vous pouvez le faire en utilisant le fichier docker-compose.yml suivant :
+
+yaml
+Copier le code
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+Lancez MongoDB avec Docker :
+
+bash
+Copier le code
+docker-compose up -d
+Cela démarrera MongoDB dans un conteneur Docker accessible sur localhost:27017.
+
+Conclusion
+Ce projet montre comment créer une API sécurisée avec FastAPI, utilisant MongoDB comme base de données, et JWT pour l'authentification. Nous avons également exploré la génération d'une clé secrète pour signer les tokens JWT et la configuration d'un environnement virtuel Python pour gérer les dépendances.

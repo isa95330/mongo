@@ -1,0 +1,44 @@
+services:
+  fastapi:
+    build: .
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - SECRET_KEY=your_secret_key
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  test:
+    build: .
+    container_name: test-runner
+    command: pytest
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
