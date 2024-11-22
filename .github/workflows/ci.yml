@@ -61,11 +61,3 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
 
-    - name: Deploy to server
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
-          docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
-          docker stop fastapi-app || true
-          docker rm fastapi-app || true
-          docker run -d --name fastapi-app -p 8000:8000 --env-file .env ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
-        EOF
